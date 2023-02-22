@@ -1,3 +1,28 @@
-<html lang="eng">
-  <h1>hello world! ......</h1>
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="swagger-ui.css">
+<title>OpenAPI Petstore</title>
+<body>
+  <div id="swagger-ui"></div>
+
+  <script src="swagger-ui-bundle.js"></script>
+  <script src="swagger-ui-standalone-preset.js"></script>
+  
+  <script>
+  window.onload = function() {
+    const ui = SwaggerUIBundle({
+      url: "ml-apis.json",
+      dom_id: '#swagger-ui',
+      presets: [
+        SwaggerUIBundle.presets.apis,
+        SwaggerUIStandalonePreset
+      ]
+    })
+  
+    window.ui = ui
+  }
+  </script>
+</body>
