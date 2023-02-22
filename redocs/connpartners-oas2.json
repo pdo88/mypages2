@@ -1,0 +1,777 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "",
+    "version": "",
+    "title": "Connect 2.0 -- v1"
+  },
+  "basePath": "/api/order/v2",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/orders": {
+      "x-summary": "Place Orders",
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "POST - Place Orders",
+        "description": "description here of the resource",
+        "operationId": "updatePetWithForm2",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "List of user object",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OrderEntry"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/BatchResponse202"
+            }
+          },
+          "207": {
+            "description": "mixed result",
+            "schema": {
+              "$ref": "#/definitions/BatchResponse207"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "GET - Order List",
+        "description": "description here of the resource",
+        "operationId": "get-order-list",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Status values that need to be considered for filter",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "available",
+                "pending",
+                "invoiced"
+              ],
+              "default": "available"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/OrderEntry"
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/orders/{orderNumber}": {
+      "x-summary": "Order Detail",
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "GET - Order List",
+        "description": "description here of the resource",
+        "operationId": "get-order-listss",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "orderNumber",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "client_id",
+            "required": true,
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "client_secret",
+            "required": true,
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/OrderEntry"
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/confirmations": {
+      "x-summary": "Confirmation List",
+      "get": {
+        "summary": "GET - Confirmation List",
+        "tags": [
+          "Confirmations"
+        ],
+        "description": "description here of the resource",
+        "operationId": "get-confirmation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "batchId",
+            "required": true,
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "client_id",
+            "required": true,
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "client_secret",
+            "required": true,
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "x-amf-mediaType": "application/json",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ConfirmationsObject"
+              },
+              "example": [
+                {
+                  "batchId": "B9900142",
+                  "confirmationNumber": "C4-1815453",
+                  "clientTrackingId": "20191011426",
+                  "status": "Requested",
+                  "orderNumber": null
+                },
+                {
+                  "batchId": "B9900142",
+                  "clientTrackingId": "201910114235b",
+                  "status": "Duplicate",
+                  "duplicateConfirmationNumber": "C4-1815446",
+                  "orderNumber": "3938383"
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "example": {
+                "message": "Please provide query parameter: batchId "
+              }
+            }
+          },
+          "404": {
+            "description": "Client Error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "example": {
+                "message": "Resource not found"
+              }
+            }
+          },
+          "500": {
+            "description": "Client Error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "example": {
+                "message": "Internal Server Error. Please contact ABC Support at ..."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{confirmationNumber}": {
+      "x-summary": "Confirmation Detail",
+      "get": {
+        "summary": "GET - Confirmation Detail",
+        "tags": [
+          "Confirmations"
+        ],
+        "description": "description here of the resource",
+        "operationId": "get-confirmation-detail",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "confirmationNumber",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "client_id",
+            "required": true,
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "client_secret",
+            "required": true,
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "x-amf-mediaType": "application/json",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ConfirmationsObject"
+              },
+              "example": [
+                {
+                  "batchId": "B9900142",
+                  "confirmationNumber": "C4-1815453",
+                  "clientTrackingId": "20191011426",
+                  "status": "Requested",
+                  "orderNumber": null
+                },
+                {
+                  "batchId": "B9900142",
+                  "clientTrackingId": "201910114235b",
+                  "status": "Duplicate",
+                  "duplicateConfirmationNumber": "C4-1815446",
+                  "orderNumber": "3938383"
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "example": {
+                "message": "Please provide query parameter: batchId "
+              }
+            }
+          },
+          "404": {
+            "description": "Client Error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "example": {
+                "message": "Resource not found"
+              }
+            }
+          },
+          "500": {
+            "description": "Client Error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "example": {
+                "message": "Internal Server Error. Please contact ABC Support at ..."
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "deliveryAppointment": {
+      "type": "object",
+      "description" : "Must have at least an SM contactFunctionCode entry",
+      "properties": {
+        "instructionsTypeCode": {
+          "type": "string",
+          "example": "AT",
+          "description": "AT: Anytime Delivery, AM: Morning Delivery, PM: Afternoon Delivery, FS: First Stop Delivery, ST: Specific Time, TR: Time Range "
+        },
+        "instructions": {
+          "type": "string",
+          "example": "Please leave in driveway"
+        },
+        "fromTime": {
+          "type": "string",
+          "example": "10:00"
+        },
+        "toTime": {
+          "type": "string",
+          "example": "16:00"
+        },
+        "timeCode": {
+          "type": "string",
+          "example": "CT",
+          "description": "Timezone"
+        }
+      }
+    },
+    "dates": {
+      "type": "object",
+      "properties": {
+        "deliveryRequestedOn": {
+          "type": "string",
+          "format" : "date"
+        }
+      }
+    },
+    "address": {
+      "type": "object",
+      "properties": {
+        "line1": {
+          "type": "string",
+          "example": "764 Greenwood Springs Dr."
+        },
+        "line2": {
+          "type": "string",
+          "example": ""
+        },
+        "line3": {
+          "type": "string",
+          "example": ""
+        },
+        "city": {
+          "type": "string",
+          "example": "Greenwood"
+        },
+        "state": {
+          "type": "string",
+          "example": "IN"
+        },
+        "postal": {
+          "type": "string",
+          "example": "46143"
+        },
+        "country": {
+          "type": "string",
+          "example": "USA"
+        }
+      }
+    },
+    "phone": {
+      "type": "object",
+      "properties": {
+        "numberx": {
+          "type": "string",
+          "example": "+13043651700"
+        },
+        "typex": {
+          "type": "string",
+          "enum": [
+            "MOBILE",
+            "OFFICE",
+            "OTHERS"
+          ],
+          "default": "MOBILE",
+          "example": "MOBILE"
+        },
+        "ext": {
+          "type": "string",
+          "example": ""
+        }
+      }
+    },
+    "email": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "enum": [
+            "PRIMARY"
+          ],
+          "example": "abcust@example.com"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "PRIMARY"
+          ],
+          "example": "PRIMARY"
+        }
+      }
+    },
+    "ContactFunctionCode": {
+      "type": "string",
+      "default": "OC",
+      "example": "IC",
+      "description": "IC: Information Contact; DC: Delivery Contact (Job Site Contact), SM=Submitting Contact, OC=Order Contact, if not passed, we'll treat your contact as IC for our use"
+    },
+    "Contact": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "functionCode": {
+          "$ref": "#/definitions/ContactFunctionCode"
+        },
+        "phones": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/phone"
+          }
+        },
+        "emails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/email"
+          }
+        }
+      }
+    },
+    "OrderList": {
+      "type": "object",
+      "properties": {
+        "trackingId": {
+          "type": "string",
+          "example": "9393939fn383n3393"
+        },
+        "purchaseOrder": {
+          "type": "string",
+          "example": "PO-123456890"
+        },
+        "branchNumber": {
+          "type": "string",
+          "example": "409"
+        },
+        "type": {
+          "type": "string",
+          "example": "Delivery"
+        },
+        "deliveryType": {
+          "type": "string",
+          "example": "Rooftop Delivery"
+        },
+        "dates": {
+          "$ref": "#/definitions/dates"
+        },
+        "deliveryAppointment": {
+          "$ref": "#/definitions/deliveryAppointment"
+        },
+        "currency": {
+          "example": "USD",
+          "type": "string",
+          "default": "USD"
+        },
+        "estimatedAmount": {
+          "type": "number",
+          "example": 106.83,
+          "description": "Estimated total cost of order as priced by"
+        },
+        "shipTo": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "John Doe"
+            },
+            "title": {
+              "type": "string",
+              "example": "Contractor"
+            },
+            "address": {
+              "$ref": "#/definitions/address"
+            },
+            "contacts": {
+              "$ref": "#/definitions/Contact"
+            }
+          }
+        }
+      }
+    },
+    "OrderEntry": {
+      "type": "object",
+      "properties": {
+        "trackingId": {
+          "type": "string",
+          "description" : "Client's unique tracking ID. It must be unique for each order request. If it is submitted again after it has been successfully accepted, the order request will be treated as duplicate and will not be accepted",
+          "example": "9393939fn383n3393"
+        },
+        "purchaseOrder": {
+          "type": "string",
+          "description" : "Buyer's purchase order",
+          "example": "PO-123456890"
+        },
+        "branchNumber": {
+          "type": "string",
+          "example": "409"
+        },
+        "type": {
+          "type": "string",
+          "title": "Type",
+          "description" : "Order Request Type (Delivery, Customer Pickup)",
+          "enum": [
+            "Delivery",
+            "Customer Pickup"
+          ],
+          "example": "Delivery"
+        },
+        "deliveryType": {
+          "type": "string",
+          "example": "Rooftop Delivery"
+        },
+        "dates": {
+          "$ref": "#/definitions/dates"
+        },
+        "deliveryAppointment": {
+          "$ref": "#/definitions/deliveryAppointment"
+        },
+        "currency": {
+          "example": "USD",
+          "type": "string",
+          "default": "USD"
+        },
+        "estimatedAmount": {
+          "type": "number",
+          "example": 106.83,
+          "description": "Estimated total cost of order as priced by"
+        },
+        "shipTo": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "John Doe"
+            },
+            "title": {
+              "type": "string",
+              "example": "Contractor"
+            },
+            "address": {
+              "$ref": "#/definitions/address"
+            },
+            "contacts": {
+              "$ref": "#/definitions/Contact"
+            }
+          }
+        }
+      }
+    },
+    "BatchResponse202": {
+      "title": "Response payload",
+      "type": "object",
+      "properties": {
+        "batchId": {
+          "title": "Request Batch Id",
+          "example": "B39393939399",
+          "type": "string"
+        },
+        "requests": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResponseByRequest"
+          }
+        }
+      }
+    },
+    "BatchResponse207": {
+      "title": "Response payload",
+      "type": "object",
+      "properties": {
+        "batchId": {
+          "title": "Request Batch Id",
+          "example": "B39393939399",
+          "type": "string"
+        },
+        "requests": {
+          "type": "array",
+          "items": [
+            {
+              "$ref": "#/definitions/ResponseByRequest207"
+            }
+          ]
+        }
+      }
+    },
+    "ResponseByRequest207": {
+      "title": "Response payload",
+      "type": "object",
+      "properties": {
+        "confirmationNumber": {
+          "title": "API provided confirmation number for this request",
+          "example": "383838383838",
+          "type": "string"
+        },
+        "clientTrackingId": {
+          "title": "Received client tracking ID",
+          "example": "3838383383",
+          "type": "string"
+        },
+        "requestStatus": {
+          "title": "Order Request Status (Received, Accepted,Cancelled)",
+          "enum": [
+            "Requested",
+            "Accepted",
+            "Duplicate",
+            "Cancelled"
+          ],
+          "example": "Duplicate",
+          "type": "string"
+        },
+        "orderNumber": {
+          "title": "Order Number",
+          "example": "2323232",
+          "type": "string"
+        },
+        "duplicateConfirmationNumber": {
+          "title": "Duplicat Confirmation Number",
+          "example": "C4-1000221",
+          "type": "string"
+        }
+      }
+    },
+    "ResponseByRequest": {
+      "title": "Response payload",
+      "type": "object",
+      "properties": {
+        "confirmationNumber": {
+          "title": "API provided confirmation number for this request",
+          "example": "383838383838",
+          "type": "string"
+        },
+        "clientTrackingId": {
+          "title": "Received client tracking ID",
+          "example": "3838383383",
+          "type": "string"
+        },
+        "requestStatus": {
+          "title": "Order Request Status (Received, Accepted,Cancelled)",
+          "enum": [
+            "Requested",
+            "Accepted",
+            "Duplicate",
+            "Cancelled"
+          ],
+          "example": "Requested",
+          "type": "string"
+        },
+        "orderNumber": {
+          "title": "Order Number",
+          "example": "2323232",
+          "type": "string"
+        }
+      }
+    },
+    "ConfirmationsObject": {
+      "title": "Confirmation Response",
+      "type": "object",
+      "properties": {
+        "batchId": {
+          "example": "383838383838",
+          "type": "string"
+        },
+        "confirmationNumber": {
+          "title": "API provided confirmation number for this request",
+          "example": "383838383838",
+          "type": "string"
+        },
+        "clientTrackingId": {
+          "title": "Received client tracking ID",
+          "example": "3838383383",
+          "type": "string"
+        },
+        "status": {
+          "title": "Order Request Status (Received, Accepted,Cancelled)",
+          "enum": [
+            "Requested",
+            "Accepted",
+            "Duplicate",
+            "Cancelled"
+          ],
+          "example": "Requested",
+          "type": "string"
+        },
+        "duplicateConfirmationNumber": {
+          "title": "Duplicate Confirmation Number",
+          "example": "C4-2323232",
+          "type": "string"
+        },
+        "orderNumber": {
+          "title": "Order Number",
+          "example": "2323232",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
